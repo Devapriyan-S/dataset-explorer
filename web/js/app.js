@@ -75,6 +75,10 @@ function readFile(file) {
 
 const showError = (msg) => { $("#error").hidden = false; $("#error").textContent = msg; };
 
+/* Suppresses the smooth-scroll that suits a click and not a page setting
+   itself up before anyone has touched it. */
+let booting = false;
+
 function load(text, name) {
   $("#error").hidden = true;
   const t0 = performance.now();
@@ -108,7 +112,7 @@ function load(text, name) {
   applyView();
 
   $("#workspace").hidden = false;
-  $("#workspace").scrollIntoView({ behavior: "smooth", block: "start" });
+  if (!booting) $("#workspace").scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 function renderMeta(name, delimiter, ms, bytes) {
@@ -395,3 +399,46 @@ function makeSample(kind) {
   }
   return out.join("\n");
 }
+
+
+/* ── Automatic demo on arrival ────────────────────────────── */
+
+/* A visitor should land on a working grid, not an empty upload box. The
+   medium sample is used rather than the 100k one: the point of the first
+   screen is that the tool works, and 5,000 rows makes that instantly, while
+   the 100k button right there proves it scales. */
+(function bootstrapDemo() {
+  booting = true;
+  try {
+    load(makeSample("medium"), "sample-customers.csv");
+
+    const host = $("#workspace").querySelector(".step");
+    const banner = el("div", "demo-banner");
+    banner.append(el("span", "badge badge-privacy", "Live demo"));
+    const text = el("span");
+    text.textContent =
+      "Loaded with 5,000 generated rows so you can start straight away. " +
+      "Sort a column, filter, or load the 100,000-row file to watch it stay smooth.";
+    banner.append(text, el("span", "spacer"));
+    const btn = el("button", null, "Open your own CSV →");
+    btn.type = "button";
+    btn.addEventListener("click", () => {
+      dz.hidden = false;
+      dz.classList.add("compact");
+      dz.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+    banner.append(btn);
+    host.insertBefore(banner, host.querySelector(".lead").nextSibling);
+
+    dz.hidden = true;
+
+    dz.classList.add("compact");
+    dz.querySelector(".dz-title").textContent = "Drop your own CSV to replace the sample";
+    dz.querySelector(".dz-sub").textContent =
+      "Comma, semicolon, tab or pipe delimited — detected automatically";
+  } catch (err) {
+    console.error("demo bootstrap failed", err);
+  } finally {
+    booting = false;
+  }
+})();
