@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dataset Explorer — open a 100,000-row CSV without waiting</title>
+<meta name="description" content="Drop in any CSV and explore it instantly: virtualised table, sorting, filtering, per-column statistics. Handles quoted commas, embedded newlines and 100k+ rows. No server, no upload.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔍</text></svg>">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+
+<header class="masthead">
+  <div class="wrap">
+    <div class="brand">
+      <span class="brand-mark">▤</span>
+      <div>
+        <h1>Dataset Explorer</h1>
+        <p class="tagline">Open a 100,000-row CSV <em>instantly</em> — no upload, no framework.</p>
+      </div>
+    </div>
+    <div class="badges">
+      <span class="badge badge-privacy"><span class="dot"></span> Parsed in this tab</span>
+      <span class="badge">0 dependencies</span>
+      <a class="badge badge-link" href="https://github.com/Devapriyan-S/dataset-explorer" target="_blank" rel="noopener">Source ↗</a>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="step">
+    <div class="step-head"><span class="step-num">1</span><h2>Open a file</h2></div>
+
+    <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Upload a CSV file">
+      <input type="file" id="file-input" accept=".csv,.tsv,text/csv" hidden>
+      <div class="dz-icon">⇪</div>
+      <p class="dz-title">Drop a CSV here, or click to browse</p>
+      <p class="dz-sub">Comma, semicolon, tab or pipe delimited — detected automatically</p>
+    </div>
+
+    <div class="samples">
+      <span class="samples-label">Or try:</span>
+      <button class="chip" data-sample="medium">5,000 rows</button>
+      <button class="chip" data-sample="large">100,000 rows <em>watch it stay smooth</em></button>
+      <button class="chip" data-sample="messy">Messy file <em>quotes, newlines, accents</em></button>
+    </div>
+
+    <div id="error" class="alert alert-error" hidden></div>
+  </section>
+
+  <div id="workspace" hidden>
+
+    <section class="step">
+      <div class="step-head"><span class="step-num">2</span><h2>What's in it</h2></div>
+      <p class="lead" id="file-name"></p>
+      <div class="kpi-grid" id="meta"></div>
+      <h3 class="sub">Per column <span class="hint">types inferred from the values</span></h3>
+      <div class="col-grid" id="stats"></div>
+    </section>
+
+    <section class="step">
+      <div class="step-head"><span class="step-num">3</span><h2>Browse</h2></div>
+
+      <div class="toolbar">
+        <input type="search" id="filter" placeholder="Filter rows…" aria-label="Filter rows">
+        <select id="filter-col" aria-label="Column to filter"></select>
+        <span class="muted" id="row-count"></span>
+        <button class="btn btn-primary" id="export">Export filtered CSV</button>
+      </div>
+      <p class="hint">
+        Click any column header to sort. Only the rows on screen exist in the
+        DOM — that is what keeps 100,000 rows scrolling at full speed.
+      </p>
+
+      <div class="grid-wrap">
+        <div class="grid-head" id="grid-head"></div>
+        <div class="grid-scroll" id="scroller">
+          <div id="spacer"></div>
+          <div class="grid-body" id="grid-body"></div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<footer class="wrap footer">
+  <p>Built by <a href="https://github.com/Devapriyan-S" target="_blank" rel="noopener">Devapriyan Sampath</a>
+     · <a href="https://github.com/Devapriyan-S/dataset-explorer" target="_blank" rel="noopener">Source on GitHub</a></p>
+  <p class="footer-note">
+    Hand-written CSV state machine and virtualised grid. No React, no
+    PapaParse, no build step — just ES modules.
+  </p>
+</footer>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

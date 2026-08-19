@@ -1,0 +1,7 @@
+{
+  "name": "dataset-explorer",
+  "version": "1.0.0",
+  "type": "module",
+  "license": "MIT",
+  "scripts": { "test": "node tests/csv.test.mjs" }
+}
